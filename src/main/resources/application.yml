@@ -1,4 +1,15 @@
 spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/mail-queue
+    username: root
+
+  jpa:
+    generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        globally_quoted_identifiers: true
+
   mail:
     host: smtp.gmail.com
     port: 587
