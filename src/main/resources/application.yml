@@ -13,6 +13,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL5Dialect
         globally_quoted_identifiers: true
 
+
   mail:
     host: smtp.gmail.com
     port: 587

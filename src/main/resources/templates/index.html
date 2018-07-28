@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>メール一覧</title>
+</head>
+<body>
+<div>
+  <form th:action="@{/send}" method="post">
+    <button type="submit">テストメール送信</button>
+  </form>
+
+  <table border="1">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>STATUS</th>
+      <th>SENT_DATE</th>
+      <th>FROM</th>
+      <th>TO</th>
+      <th>SUBJECT</th>
+      <th>TEXT</th>
+      <th>RESEND</th>
+    </tr>
+
+    </thead>
+    <tbody>
+    <tr th:each="mail : ${mails}">
+      <td th:text="${mail.id}"></td>
+      <td th:text="${mail.mailStatus.name()}"></td>
+      <td th:text="${mail.sentDate}"></td>
+      <td th:text="${mail.from}"></td>
+      <td th:text="${#strings.arrayJoin(mail.to, ', ')}"></td>
+      <td th:text="${mail.subject}"></td>
+      <td><a th:href="@{/{id}/text(id=${mail.id})}" th:text="テキスト" target="_blank"></a></td>
+      <td>
+        <form th:action="@{/{id}/resend(id=${mail.id})}" method="post">
+          <button type="submit">再送</button>
+        </form>
+      </td>
+    </tr>
+    </tbody>
+
+  </table>
+  <ul>
+    <li th:if="${!page.first}"><a th:href="@{/(page=${page.number}-1)}"
+                                  th:text="${page.number}"></a></li>
+    <li th:text="${page.number}+1"></li>
+    <li th:if="${!page.last}"><a th:href="@{/(page=${page.number}+1)}"
+                                 th:text="${page.number}+2"></a></li>
+  </ul>
+</div>
+</body>
+</html>
