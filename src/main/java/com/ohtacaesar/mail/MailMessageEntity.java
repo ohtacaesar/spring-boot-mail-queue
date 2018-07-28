@@ -3,12 +3,15 @@ package com.ohtacaesar.mail;
 import java.util.Date;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Data;
 import org.springframework.mail.MailMessage;
 import org.springframework.mail.MailParseException;
+import org.springframework.mail.SimpleMailMessage;
 
 @Entity
 @Data
@@ -17,6 +20,9 @@ public class MailMessageEntity implements MailMessage {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
+
+  @Enumerated(EnumType.ORDINAL)
+  private MailStatus mailStatus = MailStatus.NEW;
 
   private String from;
 
@@ -67,5 +73,19 @@ public class MailMessageEntity implements MailMessage {
   @Override
   public void setBcc(String[] bcc) throws MailParseException {
     this.bcc = bcc;
+  }
+
+  public SimpleMailMessage createSimpleMailMessage() {
+    SimpleMailMessage smm = new SimpleMailMessage();
+    smm.setFrom(this.getFrom());
+    smm.setReplyTo(this.getReplyTo());
+    smm.setTo(this.getTo());
+    smm.setCc(this.getCc());
+    smm.setBcc(this.getBcc());
+    smm.setSentDate(this.getSentDate());
+    smm.setSubject(this.getSubject());
+    smm.setText(this.getText());
+
+    return smm;
   }
 }
