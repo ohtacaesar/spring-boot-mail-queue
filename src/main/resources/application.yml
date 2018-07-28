@@ -1,10 +1,13 @@
 spring:
+  profiles.active: @spring.profile@
+
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/mail-queue
     username: root
 
   jpa:
     generate-ddl: true
+    show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
@@ -19,5 +22,3 @@ spring:
       mail.smtp:
         auth: true
         starttls.enable: true
-
-
