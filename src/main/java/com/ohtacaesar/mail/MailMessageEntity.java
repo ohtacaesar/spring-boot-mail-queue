@@ -1,6 +1,7 @@
 package com.ohtacaesar.mail;
 
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -8,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import lombok.Data;
 import org.springframework.mail.MailMessage;
 import org.springframework.mail.MailParseException;
@@ -41,6 +43,7 @@ public class MailMessageEntity implements MailMessage {
 
   private String subject;
 
+  @Lob
   private String text;
 
 
@@ -57,7 +60,6 @@ public class MailMessageEntity implements MailMessage {
   @Override
   public void setCc(String cc) throws MailParseException {
     this.cc = new String[]{cc};
-
   }
 
   @Override
@@ -87,5 +89,17 @@ public class MailMessageEntity implements MailMessage {
     smm.setText(this.getText());
 
     return smm;
+  }
+
+  public MailMessageEntity copy() {
+    MailMessageEntity n = new MailMessageEntity();
+    n.setFrom(this.getFrom());
+    n.setReplyTo(this.getReplyTo());
+    n.setTo(this.getTo());
+    n.setCc(this.getCc());
+    n.setBcc(this.getBcc());
+    n.setSubject(this.getSubject());
+    n.setText(this.getText());
+    return n;
   }
 }

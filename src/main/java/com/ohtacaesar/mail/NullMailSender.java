@@ -28,7 +28,6 @@ public class NullMailSender implements MailSender {
     }
   }
 
-
   public static class RandomMailException extends MailException {
 
     public RandomMailException() {
