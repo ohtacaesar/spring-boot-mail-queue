@@ -6,9 +6,18 @@
 </head>
 <body>
 <div>
-  <form th:action="@{/send}" method="post">
+  <form th:action="@{/send}" th:object="${form}" method="post">
+    <label>FROM</label>
+    <input type="text" th:field="*{from}"/>
+    <label>TO</label>
+    <input type="text" th:field="*{to}"/>
+    <label>タイトル</label>
+    <input type="text" th:field="*{subject}"/>
+    <label>本文</label>
+    <textarea th:field="*{text}" cols="4"></textarea>
     <button type="submit">テストメール送信</button>
   </form>
+
   <form th:action="@{/task}" method="post">
     <button type="submit">送信タスク</button>
   </form>
