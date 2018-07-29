@@ -1,7 +1,6 @@
 package com.ohtacaesar.mail;
 
 import java.util.Date;
-import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.Version;
 import lombok.Data;
 import org.springframework.mail.MailMessage;
 import org.springframework.mail.MailParseException;
@@ -22,6 +22,9 @@ public class MailMessageEntity implements MailMessage {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
+
+  @Version
+  private int version;
 
   @Enumerated(EnumType.ORDINAL)
   private MailStatus mailStatus = MailStatus.NEW;
@@ -45,7 +48,6 @@ public class MailMessageEntity implements MailMessage {
 
   @Lob
   private String text;
-
 
   @Override
   public void setTo(String to) throws MailParseException {

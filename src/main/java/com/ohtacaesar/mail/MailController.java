@@ -62,4 +62,17 @@ public class MailController {
     return "redirect:/";
   }
 
+  @Autowired
+  private MailService service;
+
+  @PostMapping("task")
+  public String task() {
+    try {
+      service.send();
+    } catch (Exception ignore) {
+
+    }
+
+    return "redirect:/";
+  }
 }
