@@ -1,6 +1,7 @@
 package com.ohtacaesar.mail;
 
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -29,10 +30,12 @@ public class MailMessageEntity implements MailMessage {
   @Enumerated(EnumType.ORDINAL)
   private MailStatus mailStatus = MailStatus.NEW;
 
+  @Column(nullable = false)
   private String from;
 
   private String replyTo;
 
+  @Column(nullable = false)
   @Convert(converter = StringArrayConverter.class)
   private String[] to;
 
@@ -44,8 +47,10 @@ public class MailMessageEntity implements MailMessage {
 
   private Date sentDate;
 
+  @Column(nullable = false)
   private String subject;
 
+  @Column(nullable = false)
   @Lob
   private String text;
 
