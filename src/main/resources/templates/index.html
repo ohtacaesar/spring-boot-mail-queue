@@ -9,11 +9,15 @@
   <form th:action="@{/send}" method="post">
     <button type="submit">テストメール送信</button>
   </form>
+  <form th:action="@{/task}" method="post">
+    <button type="submit">送信タスク</button>
+  </form>
 
   <table border="1">
     <thead>
     <tr>
       <th>ID</th>
+      <th>Version</th>
       <th>STATUS</th>
       <th>SENT_DATE</th>
       <th>FROM</th>
@@ -27,6 +31,7 @@
     <tbody>
     <tr th:each="mail : ${mails}">
       <td th:text="${mail.id}"></td>
+      <td th:text="${mail.version}"></td>
       <td th:text="${mail.mailStatus.name()}"></td>
       <td th:text="${mail.sentDate}"></td>
       <td th:text="${mail.from}"></td>

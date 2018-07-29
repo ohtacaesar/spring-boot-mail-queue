@@ -4,6 +4,8 @@ spring:
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/mail-queue
     username: root
+    test-on-borrow: true
+    validateion-query: select 1
 
   jpa:
     generate-ddl: true
@@ -11,6 +13,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5Dialect
+        format_sql: true
         globally_quoted_identifiers: true
 
 
@@ -23,3 +26,5 @@ spring:
       mail.smtp:
         auth: true
         starttls.enable: true
+
+logging.level.org.hibernate.SQL: DEBUG
