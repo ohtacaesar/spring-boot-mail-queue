@@ -6,15 +6,19 @@
 </head>
 <body>
 <div>
-  <form th:action="@{/send}" th:object="${form}" method="post">
+  <form th:action="@{/send(page=${page.number})}" th:object="${mailMessageForm}" method="post">
     <label>FROM</label>
     <input type="text" th:field="*{from}"/>
+    <span th:if="${#fields.hasErrors('from')}" th:errors="*{from}"></span>
     <label>TO</label>
     <input type="text" th:field="*{to}"/>
+    <span th:if="${#fields.hasErrors('to')}" th:errors="*{to}"></span>
     <label>タイトル</label>
     <input type="text" th:field="*{subject}"/>
+    <span th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></span>
     <label>本文</label>
     <textarea th:field="*{text}" cols="4"></textarea>
+    <span th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
     <button type="submit">テストメール送信</button>
   </form>
 
@@ -38,7 +42,7 @@
 
     </thead>
     <tbody>
-    <tr th:each="mail : ${mails}">
+    <tr th:each="mail : ${page}">
       <td th:text="${mail.id}"></td>
       <td th:text="${mail.version}"></td>
       <td th:text="${mail.mailStatus.name()}"></td>
