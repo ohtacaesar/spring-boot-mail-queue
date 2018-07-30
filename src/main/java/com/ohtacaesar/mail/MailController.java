@@ -7,13 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class MailController {
@@ -22,19 +22,15 @@ public class MailController {
   private MailMessageEntityRepository repository;
 
   @GetMapping
-  public ModelAndView index(
-      ModelAndView mav,
-      MailMessageForm form,
-      @PageableDefault(sort = "id", direction = Direction.DESC) Pageable pageable
+  public String index(
+      @PageableDefault(size = 20, direction = Direction.DESC, sort = {"id"}) Pageable pageable,
+      MailMessageForm mailMessageForm,
+      Model model
   ) {
     Page<MailMessageEntity> page = repository.findAll(pageable);
+    model.addAttribute("page", page);
 
-    mav.addObject("page", page);
-    mav.addObject("mails", page.getContent());
-    mav.addObject("form", form);
-    mav.setViewName("index");
-
-    return mav;
+    return "index";
   }
 
   @GetMapping("{id}/text")
@@ -44,22 +40,30 @@ public class MailController {
     return e.getText();
   }
 
+  @PostMapping("send")
+  public String send(
+      @PageableDefault(size = 20, direction = Direction.DESC, sort = {"id"}) Pageable pageable,
+      @Validated MailMessageForm mailMessageForm,
+      BindingResult bindingResult,
+      Model model
+  ) {
+    if (bindingResult.hasErrors()) {
+      return index(pageable, mailMessageForm, model);
+    }
+    MailMessageEntity o = new MailMessageEntity();
+    BeanUtils.copyProperties(mailMessageForm, o);
+    o.setTo(mailMessageForm.getTo());
+    repository.save(o);
+
+    return "redirect:/";
+  }
+
   @PostMapping("{id}/resend")
   public String resend(@PathVariable int id) {
     MailMessageEntity e = repository.findOne(id);
     e = e.copy();
     e.setSubject("Copy from" + id);
     repository.save(e);
-
-    return "redirect:/";
-  }
-
-  @PostMapping("send")
-  public String create(@Validated @ModelAttribute MailMessageForm form) {
-    MailMessageEntity o = new MailMessageEntity();
-    BeanUtils.copyProperties(form, o);
-    o.setTo(form.getTo());
-    repository.save(o);
 
     return "redirect:/";
   }
