@@ -6,20 +6,50 @@
 </head>
 <body>
 <div>
-  <form th:action="@{/send(page=${page.number})}" th:object="${mailMessageForm}" method="post">
-    <label>FROM</label>
-    <input type="text" th:field="*{from}"/>
-    <span th:if="${#fields.hasErrors('from')}" th:errors="*{from}"></span>
-    <label>TO</label>
-    <input type="text" th:field="*{to}"/>
-    <span th:if="${#fields.hasErrors('to')}" th:errors="*{to}"></span>
-    <label>タイトル</label>
-    <input type="text" th:field="*{subject}"/>
-    <span th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></span>
-    <label>本文</label>
-    <textarea th:field="*{text}" cols="4"></textarea>
-    <span th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
-    <button type="submit">テストメール送信</button>
+  <form th:action="@{/send(page=${page.number})}" th:object="${mailMessageEntity}" method="post">
+    <table border="1">
+      <tr>
+        <th><label>FROM</label></th>
+        <td>
+          <input type="text" th:field="*{from}"/>
+          <span th:if="${#fields.hasErrors('from')}" th:errors="*{from}"></span>
+        </td>
+      </tr>
+      <tr>
+        <th rowspan="3"><label>TO</label></th>
+        <td>
+          <input type="text" th:field="*{to[0]}"/>
+          <span th:if="${#fields.hasErrors('to')}" th:errors="*{to}"></span>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="text" th:field="*{to[1]}"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="text" th:field="*{to[2]}"/>
+        </td>
+      </tr>
+      <tr>
+        <th><label>タイトル</label></th>
+        <td>
+          <input type="text" th:field="*{subject}"/>
+          <span th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></span>
+        </td>
+      </tr>
+      <tr>
+        <th><label>本文</label></th>
+        <td>
+          <textarea th:field="*{text}" style="width: 300px; height: 8em"></textarea>
+          <span th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
+        </td>
+      </tr>
+    </table>
+    <div>
+      <button type="submit">テストメール送信</button>
+    </div>
   </form>
 
   <form th:action="@{/task}" method="post">
