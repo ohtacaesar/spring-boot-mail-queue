@@ -1,17 +1,26 @@
 package com.ohtacaesar.mail;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.mail.MailMessage;
 import org.springframework.mail.MailParseException;
 import org.springframework.mail.SimpleMailMessage;
@@ -30,67 +39,92 @@ public class MailMessageEntity implements MailMessage {
   @Enumerated(EnumType.ORDINAL)
   private MailStatus mailStatus = MailStatus.NEW;
 
+  @NotNull
+  @NotBlank
+  @Size(max = 255)
+  @Email
   @Column(nullable = false)
   private String from;
 
+  @Size(max = 255)
+  @Email
   private String replyTo;
 
-  @Column(nullable = false)
-  @Convert(converter = StringArrayConverter.class)
-  private String[] to;
+  @NotNull
+  @Size(min = 1, max = 10)
+  @ElementCollection
+  @Basic(fetch = FetchType.EAGER)
+  private List<String> to = new ArrayList<>();
 
-  @Convert(converter = StringArrayConverter.class)
-  private String[] cc;
+  @ElementCollection
+  private List<String> cc = new ArrayList<>();
 
-  @Convert(converter = StringArrayConverter.class)
-  private String[] bcc;
+  @ElementCollection
+  private List<String> bcc = new ArrayList<>();
 
   private Date sentDate;
 
+  @NotNull
+  @NotBlank
+  @Size(max = 255)
   @Column(nullable = false)
   private String subject;
 
-  @Column(nullable = false)
+  @NotNull
+  @NotBlank
   @Lob
+  @Column(nullable = false)
   private String text;
+
+  public String[] getToArray() {
+    return to.toArray(new String[0]);
+  }
 
   @Override
   public void setTo(String to) throws MailParseException {
-    this.to = new String[]{to};
+    this.to = Arrays.asList(to);
   }
 
   @Override
   public void setTo(String[] to) throws MailParseException {
-    this.to = to;
+    this.to = Arrays.asList(to);
+  }
+
+  public String[] getCcArray() {
+    return cc.toArray(new String[0]);
   }
 
   @Override
   public void setCc(String cc) throws MailParseException {
-    this.cc = new String[]{cc};
+    this.cc = Arrays.asList(cc);
   }
 
   @Override
   public void setCc(String[] cc) throws MailParseException {
-    this.cc = cc;
+    this.cc = Arrays.asList(cc);
+  }
+
+  public String[] getBccArray() {
+    return bcc.toArray(new String[0]);
   }
 
   @Override
   public void setBcc(String bcc) throws MailParseException {
-    this.bcc = new String[]{bcc};
+    this.bcc = Arrays.asList(bcc);
   }
 
   @Override
   public void setBcc(String[] bcc) throws MailParseException {
-    this.bcc = bcc;
+    this.bcc = Arrays.asList(bcc);
   }
 
   public SimpleMailMessage createSimpleMailMessage() {
     SimpleMailMessage smm = new SimpleMailMessage();
     smm.setFrom(this.getFrom());
     smm.setReplyTo(this.getReplyTo());
-    smm.setTo(this.getTo());
-    smm.setCc(this.getCc());
-    smm.setBcc(this.getBcc());
+    smm.setTo(this.getToArray());
+    smm.setCc(this.getCcArray());
+    smm.setBcc(this.getBccArray());
     smm.setSentDate(this.getSentDate());
     smm.setSubject(this.getSubject());
     smm.setText(this.getText());
@@ -102,9 +136,9 @@ public class MailMessageEntity implements MailMessage {
     MailMessageEntity n = new MailMessageEntity();
     n.setFrom(this.getFrom());
     n.setReplyTo(this.getReplyTo());
-    n.setTo(this.getTo());
-    n.setCc(this.getCc());
-    n.setBcc(this.getBcc());
+    n.setTo(this.getToArray());
+    n.setCc(this.getCcArray());
+    n.setBcc(this.getBccArray());
     n.setSubject(this.getSubject());
     n.setText(this.getText());
     return n;

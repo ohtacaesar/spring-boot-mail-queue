@@ -1,7 +1,7 @@
 package com.ohtacaesar.mail;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -10,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,10 +26,11 @@ public class MailController {
   @GetMapping
   public String index(
       @PageableDefault(size = 20, direction = Direction.DESC, sort = {"id"}) Pageable pageable,
-      MailMessageForm mailMessageForm,
+      MailMessageEntity mailMessageEntity,
       Model model
   ) {
     Page<MailMessageEntity> page = repository.findAll(pageable);
+    model.addAttribute(mailMessageEntity);
     model.addAttribute("page", page);
 
     return "index";
@@ -43,17 +46,14 @@ public class MailController {
   @PostMapping("send")
   public String send(
       @PageableDefault(size = 20, direction = Direction.DESC, sort = {"id"}) Pageable pageable,
-      @Validated MailMessageForm mailMessageForm,
+      @Validated MailMessageEntity mailMessageEntity,
       BindingResult bindingResult,
       Model model
   ) {
     if (bindingResult.hasErrors()) {
-      return index(pageable, mailMessageForm, model);
+      return index(pageable, mailMessageEntity, model);
     }
-    MailMessageEntity o = new MailMessageEntity();
-    BeanUtils.copyProperties(mailMessageForm, o);
-    o.setTo(mailMessageForm.getTo());
-    repository.save(o);
+    repository.save(mailMessageEntity);
 
     return "redirect:/";
   }
@@ -80,6 +80,11 @@ public class MailController {
     }
 
     return "redirect:/";
+  }
+
+  @InitBinder
+  public void initBinder(WebDataBinder binder) {
+    binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
   }
 
 }

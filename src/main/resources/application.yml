@@ -16,7 +16,6 @@ spring:
         hbm2ddl.auto: update
         globally_quoted_identifiers: true
 
-
   mail:
     host: smtp.gmail.com
     port: 587
@@ -29,4 +28,4 @@ spring:
 
 logging.level:
   ROOT: INFO
-  org.hibernate.SQL: INFO
+  org.hibernate.SQL: DEBUG
