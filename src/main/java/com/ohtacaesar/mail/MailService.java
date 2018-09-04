@@ -16,11 +16,10 @@ public class MailService {
   private MailSender sender;
 
   public void send() {
-    List<MailMessageEntity> list = repository.findOneByMailStatusOrderByIdAsc(MailStatus.NEW);
+    List<MailMessageEntity> list = repository.findByMailStatusOrderByIdAsc(MailStatus.NEW);
     if (list.size() == 0) {
       return;
     }
-
     MailMessageEntity o = list.get(0);
     o.setMailStatus(MailStatus.LOCK);
     repository.save(o);

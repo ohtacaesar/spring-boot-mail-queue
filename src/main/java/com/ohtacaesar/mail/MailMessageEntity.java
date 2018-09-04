@@ -1,16 +1,13 @@
 package com.ohtacaesar.mail;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +16,8 @@ import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.mail.MailMessage;
@@ -53,14 +52,16 @@ public class MailMessageEntity implements MailMessage {
   @NotNull
   @Size(min = 1, max = 10)
   @ElementCollection
-  @Basic(fetch = FetchType.EAGER)
-  private List<String> to = new ArrayList<>();
+  @LazyCollection(LazyCollectionOption.FALSE)
+  private List<String> to = Arrays.asList("", "", "");
 
   @ElementCollection
-  private List<String> cc = new ArrayList<>();
+  @LazyCollection(LazyCollectionOption.FALSE)
+  private List<String> cc = Arrays.asList("");
 
   @ElementCollection
-  private List<String> bcc = new ArrayList<>();
+  @LazyCollection(LazyCollectionOption.FALSE)
+  private List<String> bcc = Arrays.asList("");
 
   private Date sentDate;
 
