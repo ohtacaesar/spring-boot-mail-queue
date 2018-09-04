@@ -15,21 +15,12 @@
           <span th:if="${#fields.hasErrors('from')}" th:errors="*{from}"></span>
         </td>
       </tr>
-      <tr>
-        <th rowspan="3"><label>TO</label></th>
+      <tr th:each="o, stat: *{to}">
+        <th><label>TO</label></th>
         <td>
-          <input type="text" th:field="*{to[0]}"/>
-          <span th:if="${#fields.hasErrors('to')}" th:errors="*{to}"></span>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <input type="text" th:field="*{to[1]}"/>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <input type="text" th:field="*{to[2]}"/>
+          <input type="text" th:field="*{to[__${stat.index}__]}"/>
+          <span th:if="${#fields.hasErrors('to[__${stat.index}__]')}"
+                th:errors="*{to[__${stat.index}__]}"></span>
         </td>
       </tr>
       <tr>

@@ -16,6 +16,9 @@ spring:
         hbm2ddl.auto: update
         globally_quoted_identifiers: true
 
+  thymeleaf:
+    cache: false
+
   mail:
     host: smtp.gmail.com
     port: 587
