@@ -5,7 +5,7 @@
 <body>
 
 <div layout:fragment="content">
-  <form th:action="@{/send}" th:object="${mailMessage}" method="post">
+  <form th:action="@{/new}" th:object="${mailMessage}" method="post">
     <table class="table">
       <tr>
         <th><label>FROM</label></th>
@@ -39,6 +39,7 @@
     </table>
     <div class="form-group">
       <button type="submit" class="btn btn-primary">送信</button>
+      <a th:href="@{/}" class="btn">戻る</a>
     </div>
   </form>
 </div>

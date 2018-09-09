@@ -4,6 +4,7 @@ import com.ohtacaesar.mail.model.MailAddress;
 import com.ohtacaesar.mail.model.MailAddressRepository;
 import com.ohtacaesar.mail.model.MailMessage;
 import com.ohtacaesar.mail.model.MailMessageRepository;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,14 @@ public class MailController {
     return "index";
   }
 
+  @GetMapping("address")
+  public String address(Model model) {
+    List<MailAddress> addressList = addressRepository.findAll();
+    model.addAttribute(addressList);
+
+    return "address";
+  }
+
 
   @GetMapping("{id}")
   public String show(@PathVariable int id, Model model) {
@@ -71,9 +80,8 @@ public class MailController {
     return "new";
   }
 
-  @PostMapping("send")
+  @PostMapping("new")
   public String sendMail(
-      @PageableDefault(size = 20, direction = Direction.DESC, sort = {"id"}) Pageable pageable,
       @Validated MailMessage mailMessage,
       BindingResult bindingResult,
       Model model
