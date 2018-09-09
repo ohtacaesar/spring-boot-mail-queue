@@ -3,6 +3,7 @@ package com.ohtacaesar.mail;
 import com.ohtacaesar.mail.model.MailMessage;
 import com.ohtacaesar.mail.model.MailMessage.Status;
 import com.ohtacaesar.mail.model.MailMessageRepository;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -31,6 +32,7 @@ public class MailService {
     try {
       sender.send(o.createSimpleMailMessage());
       o.setMailStatus(Status.SENT);
+      o.setSentDate(new Date());
     } catch (MailException e) {
       o.setMailStatus(Status.NEW);
     } finally {

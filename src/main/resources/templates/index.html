@@ -1,93 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8"/>
-  <title>メール一覧</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
 <body>
-<div>
-  <form th:action="@{/send(page=${page.number})}" th:object="${mailMessage}" method="post">
-    <table border="1">
-      <tr>
-        <th><label>FROM</label></th>
-        <td>
-          <input type="text" th:field="*{from}"/>
-          <span th:if="${#fields.hasErrors('from')}" th:errors="*{from}"></span>
-        </td>
-      </tr>
-      <tr th:each="o, stat: *{to}">
-        <th><label>TO</label></th>
-        <td>
-          <input type="text" th:field="*{to[__${stat.index}__].address}"/>
-          <span th:if="${#fields.hasErrors('to[__${stat.index}__].address')}"
-                th:errors="*{to[__${stat.index}__].address}"></span>
-        </td>
-      </tr>
-      <tr>
-        <th><label>タイトル</label></th>
-        <td>
-          <input type="text" th:field="*{subject}"/>
-          <span th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></span>
-        </td>
-      </tr>
-      <tr>
-        <th><label>本文</label></th>
-        <td>
-          <textarea th:field="*{text}" style="width: 300px; height: 8em"></textarea>
-          <span th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
-        </td>
-      </tr>
-    </table>
-    <div>
-      <button type="submit">テストメール送信</button>
+
+<div layout:fragment="content">
+  <div class="row">
+    <div class="col-md-12">
+
+      <table class="table table-bordered table-sm">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>FROM</th>
+          <th>TO</th>
+          <th>SUBJECT</th>
+          <th>SENT_DATE</th>
+          <th>TEXT</th>
+          <th>Version</th>
+          <th>STATUS</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="mail : ${page}">
+          <td th:text="${mail.id}" class="text-right"></td>
+          <td th:text="${mail.from}"></td>
+          <td th:text="${mail.to[0].address}"></td>
+          <td th:text="${mail.subject}"></td>
+          <td th:text="${mail.sentDate}"></td>
+          <td><a th:href="@{/{id}/text(id=${mail.id})}" th:text="テキスト" target="_blank"></a></td>
+          <td th:text="${mail.version}" class="text-right"></td>
+          <td th:text="${mail.mailStatus.name()}"></td>
+        </tr>
+        </tbody>
+
+      </table>
+      <ul>
+        <li th:if="${!page.first}"><a th:href="@{/(page=${page.number}-1)}"
+                                      th:text="${page.number}"></a></li>
+        <li th:text="${page.number}+1"></li>
+        <li th:if="${!page.last}"><a th:href="@{/(page=${page.number}+1)}"
+                                     th:text="${page.number}+2"></a></li>
+      </ul>
     </div>
-  </form>
-
-  <form th:action="@{/task}" method="post">
-    <button type="submit">送信タスク</button>
-  </form>
-
-  <table border="1">
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Version</th>
-      <th>STATUS</th>
-      <th>SENT_DATE</th>
-      <th>FROM</th>
-      <th>TO</th>
-      <th>SUBJECT</th>
-      <th>TEXT</th>
-      <th>RESEND</th>
-    </tr>
-
-    </thead>
-    <tbody>
-    <tr th:each="mail : ${page}">
-      <td th:text="${mail.id}"></td>
-      <td th:text="${mail.version}"></td>
-      <td th:text="${mail.mailStatus.name()}"></td>
-      <td th:text="${mail.sentDate}"></td>
-      <td th:text="${mail.from}"></td>
-      <td th:text="${#strings.arrayJoin(mail.toArray, ', ')}"></td>
-      <td th:text="${mail.subject}"></td>
-      <td><a th:href="@{/{id}/text(id=${mail.id})}" th:text="テキスト" target="_blank"></a></td>
-      <td>
-        <form th:action="@{/{id}/resend(id=${mail.id})}" method="post">
-          <button type="submit">再送</button>
-        </form>
-      </td>
-    </tr>
-    </tbody>
-
-  </table>
-  <ul>
-    <li th:if="${!page.first}"><a th:href="@{/(page=${page.number}-1)}"
-                                  th:text="${page.number}"></a></li>
-    <li th:text="${page.number}+1"></li>
-    <li th:if="${!page.last}"><a th:href="@{/(page=${page.number}+1)}"
-                                 th:text="${page.number}+2"></a></li>
-  </ul>
+  </div>
 </div>
 </body>
 </html>

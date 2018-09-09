@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@RequestMapping("/")
 public class MailController {
 
   @Autowired
@@ -32,7 +34,7 @@ public class MailController {
   @Autowired
   private MailAddressRepository addressRepository;
 
-  @GetMapping
+  @GetMapping("")
   public String index(
       @PageableDefault(size = 20, direction = Direction.DESC, sort = {"id"}) Pageable pageable,
       MailMessage mailMessage,
@@ -45,6 +47,15 @@ public class MailController {
     return "index";
   }
 
+
+  @GetMapping("{id}")
+  public String show(@PathVariable int id, Model model) {
+    MailMessage o = messageRepository.findOne(id);
+    model.addAttribute(o);
+
+    return "show";
+  }
+
   @GetMapping("{id}/text")
   @ResponseBody
   public String text(@PathVariable int id) {
@@ -52,15 +63,23 @@ public class MailController {
     return e.getText();
   }
 
+
+  @GetMapping("new")
+  public String newMail(MailMessage mailMessage, Model model) {
+    model.addAttribute(mailMessage);
+
+    return "new";
+  }
+
   @PostMapping("send")
-  public String send(
+  public String sendMail(
       @PageableDefault(size = 20, direction = Direction.DESC, sort = {"id"}) Pageable pageable,
       @Validated MailMessage mailMessage,
       BindingResult bindingResult,
       Model model
   ) {
     if (bindingResult.hasErrors()) {
-      return index(pageable, mailMessage, model);
+      return newMail(mailMessage, model);
     }
 
     Map<String, MailAddress> map = addressRepository.findAll().stream()
