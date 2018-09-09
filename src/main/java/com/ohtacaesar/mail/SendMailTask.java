@@ -10,7 +10,7 @@ public class SendMailTask {
   @Autowired
   private MailService service;
 
-  @Scheduled(fixedDelay = 3000)
+  //@Scheduled(fixedDelay = 3000)
   public void sendMail() {
     service.send();
   }
