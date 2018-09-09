@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<body>
+
+<div layout:fragment="content">
+  <form th:action="@{/send}" th:object="${mailMessage}" method="post">
+    <table class="table">
+      <tr>
+        <th><label>FROM</label></th>
+        <td>
+          <input type="text" th:field="*{from}" class="form-control"/>
+          <span th:if="${#fields.hasErrors('from')}" th:errors="*{from}"></span>
+        </td>
+      </tr>
+      <tr th:each="o, stat: *{to}">
+        <th><label>TO</label></th>
+        <td>
+          <input type="text" th:field="*{to[__${stat.index}__].address}" class="form-control"/>
+          <span th:if="${#fields.hasErrors('to[__${stat.index}__].address')}"
+                th:errors="*{to[__${stat.index}__].address}"></span>
+        </td>
+      </tr>
+      <tr>
+        <th><label>タイトル</label></th>
+        <td>
+          <input type="text" th:field="*{subject}" class="form-control"/>
+          <span th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}"></span>
+        </td>
+      </tr>
+      <tr>
+        <th><label>本文</label></th>
+        <td>
+          <textarea th:field="*{text}" class="form-control"></textarea>
+          <span th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
+        </td>
+      </tr>
+    </table>
+    <div class="form-group">
+      <button type="submit" class="btn btn-primary">送信</button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

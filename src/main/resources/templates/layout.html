@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8"/>
+  <title>メール</title>
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css"/>
+  <style>
+    body {
+      padding-top: 80px;
+      color: #5a5a5a;
+    }
+  </style>
+
+</head>
+
+<body>
+<header>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" th:href="@{/}">メール</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item"
+            th:classappend="${#httpServletRequest.getServletPath() == '/'} ? 'active'">
+          <a class="nav-link" th:href="@{/}">メール一覧</a>
+        </li>
+        <li class="nav-item"
+            th:classappend="${#httpServletRequest.getServletPath() == '/new'} ? 'active'">
+          <a class="nav-link" th:href="@{/new}">新規作成</a>
+        </li>
+        <li class="nav-item">
+          <form th:action="@{/task}" method="post">
+            <a class="nav-link"
+               style="cursor: pointer"
+               onclick="$(this).closest('form').submit()">送信タスク</a>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <input type="hidden" th:value="${#httpServletRequest.getServletPath()}"/>
+  <div class="container">
+    <th:block layout:fragment="content"></th:block>
+  </div>
+</main>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/propper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<th:block layout:fragment="javascript"></th:block>
+</body>
+
+</html>
+
