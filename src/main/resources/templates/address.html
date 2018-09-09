@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout">
+<body>
+
+<div layout:fragment="content">
+  <div class="row">
+    <div class="col-md-12">
+
+      <table class="table table-bordered table-sm">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Address</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="o : ${mailAddressList}">
+          <td th:text="${o.id}" class="text-right"></td>
+          <td th:text="${o.address}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>
