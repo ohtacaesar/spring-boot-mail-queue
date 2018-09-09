@@ -1,5 +1,8 @@
 package com.ohtacaesar.mail;
 
+import com.ohtacaesar.mail.model.MailMessage;
+import com.ohtacaesar.mail.model.MailMessage.Status;
+import com.ohtacaesar.mail.model.MailMessageRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
@@ -10,26 +13,27 @@ import org.springframework.stereotype.Component;
 public class MailService {
 
   @Autowired
-  private MailMessageEntityRepository repository;
+  private MailMessageRepository repository;
 
   @Autowired
   private MailSender sender;
 
   public void send() {
-    List<MailMessageEntity> list = repository.findByMailStatusOrderByIdAsc(MailStatus.NEW);
+    List<MailMessage> list = repository.findByMailStatusOrderByIdAsc(Status.NEW);
     if (list.size() == 0) {
       return;
     }
-    MailMessageEntity o = list.get(0);
-    o.setMailStatus(MailStatus.LOCK);
+    MailMessage o = list.get(0);
+    o.setMailStatus(Status.LOCK);
     repository.save(o);
+    o = repository.findOne(o.getId());
+
     try {
       sender.send(o.createSimpleMailMessage());
-      o.setMailStatus(MailStatus.SENT);
+      o.setMailStatus(Status.SENT);
     } catch (MailException e) {
-      o.setMailStatus(MailStatus.NEW);
+      o.setMailStatus(Status.NEW);
     } finally {
-      o.setVersion(o.getVersion() + 1);
       repository.save(o);
     }
   }

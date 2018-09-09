@@ -6,7 +6,7 @@
 </head>
 <body>
 <div>
-  <form th:action="@{/send(page=${page.number})}" th:object="${mailMessageEntity}" method="post">
+  <form th:action="@{/send(page=${page.number})}" th:object="${mailMessage}" method="post">
     <table border="1">
       <tr>
         <th><label>FROM</label></th>
@@ -18,9 +18,9 @@
       <tr th:each="o, stat: *{to}">
         <th><label>TO</label></th>
         <td>
-          <input type="text" th:field="*{to[__${stat.index}__]}"/>
-          <span th:if="${#fields.hasErrors('to[__${stat.index}__]')}"
-                th:errors="*{to[__${stat.index}__]}"></span>
+          <input type="text" th:field="*{to[__${stat.index}__].address}"/>
+          <span th:if="${#fields.hasErrors('to[__${stat.index}__].address')}"
+                th:errors="*{to[__${stat.index}__].address}"></span>
         </td>
       </tr>
       <tr>
@@ -69,7 +69,7 @@
       <td th:text="${mail.mailStatus.name()}"></td>
       <td th:text="${mail.sentDate}"></td>
       <td th:text="${mail.from}"></td>
-      <td th:text="${#strings.arrayJoin(mail.to, ', ')}"></td>
+      <td th:text="${#strings.arrayJoin(mail.toArray, ', ')}"></td>
       <td th:text="${mail.subject}"></td>
       <td><a th:href="@{/{id}/text(id=${mail.id})}" th:text="テキスト" target="_blank"></a></td>
       <td>
