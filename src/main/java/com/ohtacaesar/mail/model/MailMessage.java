@@ -118,9 +118,11 @@ public class MailMessage implements org.springframework.mail.MailMessage {
 
   @Override
   public void setTo(String[] to) throws MailParseException {
-    this.to = Arrays.stream(to)
-        .map(MailAddress::createWithAddress)
-        .collect(Collectors.toList());
+    if (to != null) {
+      this.to = Arrays.stream(to)
+          .map(MailAddress::createWithAddress)
+          .collect(Collectors.toList());
+    }
   }
 
   public void setCc(List<MailAddress> cc) {
@@ -138,9 +140,11 @@ public class MailMessage implements org.springframework.mail.MailMessage {
 
   @Override
   public void setCc(String[] cc) throws MailParseException {
-    this.cc = Arrays.stream(cc)
-        .map(MailAddress::createWithAddress)
-        .collect(Collectors.toList());
+    if (cc != null) {
+      this.cc = Arrays.stream(cc)
+          .map(MailAddress::createWithAddress)
+          .collect(Collectors.toList());
+    }
   }
 
   public String[] getBccArray() {
@@ -158,9 +162,11 @@ public class MailMessage implements org.springframework.mail.MailMessage {
 
   @Override
   public void setBcc(String[] bcc) throws MailParseException {
-    this.bcc = Arrays.stream(bcc)
-        .map(MailAddress::createWithAddress)
-        .collect(Collectors.toList());
+    if (bcc != null) {
+      this.bcc = Arrays.stream(bcc)
+          .map(MailAddress::createWithAddress)
+          .collect(Collectors.toList());
+    }
   }
 
   public static MailMessage createFrom(SimpleMailMessage smm) {
