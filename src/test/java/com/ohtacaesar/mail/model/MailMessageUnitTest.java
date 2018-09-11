@@ -1,6 +1,8 @@
 package com.ohtacaesar.mail.model;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.Date;
 import org.junit.Before;
@@ -18,46 +20,54 @@ public class MailMessageUnitTest {
   public void setUp() {
     Date date = new Date();
     original = new SimpleMailMessage();
-    original.setText("Text");
-    original.setSubject("Subject");
-    original.setSentDate(date);
-    original.setBcc("Bcc");
-    original.setCc("Cc");
-    original.setTo("To");
-    original.setReplyTo("ReplyTo");
     original.setFrom("From");
-
+    original.setReplyTo("ReplyTo");
+    original.setTo("To");
+    original.setCc("Cc");
+    original.setBcc("Bcc");
+    original.setSentDate(date);
+    original.setSubject("Subject");
+    original.setText("Text");
   }
 
   @Test
   public void createFrom() {
     MailMessage mailMessage = MailMessage.createFrom(original);
-    assertEquals(1, mailMessage.getTo().size());
-    assertEquals(original.getTo()[0], mailMessage.getTo().get(0).getAddress());
-    assertEquals(1, mailMessage.getCc().size());
-    assertEquals(original.getCc()[0], mailMessage.getCc().get(0).getAddress());
-    assertEquals(1, mailMessage.getTo().size());
-    assertEquals(original.getBcc()[0], mailMessage.getBcc().get(0).getAddress());
+    assertEquals(original.getFrom(), mailMessage.getFrom());
+    assertEquals(original.getReplyTo(), mailMessage.getReplyTo());
+    assertArrayEquals(original.getTo(), mailMessage.getToArray());
+    assertArrayEquals(original.getCc(), mailMessage.getCcArray());
+    assertArrayEquals(original.getBcc(), mailMessage.getBccArray());
+    assertEquals(original.getSentDate(), mailMessage.getSentDate());
     assertEquals(original.getText(), mailMessage.getText());
     assertEquals(original.getSubject(), mailMessage.getSubject());
-    assertEquals(original.getSentDate(), mailMessage.getSentDate());
-    assertEquals(original.getReplyTo(), mailMessage.getReplyTo());
-    assertEquals(original.getFrom(), mailMessage.getFrom());
   }
 
   @Test
   public void createSimpleMailMessage() {
-    SimpleMailMessage sms = MailMessage.createFrom(original).createSimpleMailMessage();
-    assertEquals(1, sms.getTo().length);
-    assertEquals(original.getTo()[0], sms.getTo()[0]);
-    assertEquals(1, sms.getCc().length);
-    assertEquals(original.getCc()[0], sms.getCc()[0]);
-    assertEquals(1, sms.getTo().length);
-    assertEquals(original.getBcc()[0], sms.getBcc()[0]);
-    assertEquals(original.getText(), sms.getText());
-    assertEquals(original.getSubject(), sms.getSubject());
-    assertEquals(original.getSentDate(), sms.getSentDate());
-    assertEquals(original.getReplyTo(), sms.getReplyTo());
-    assertEquals(original.getFrom(), sms.getFrom());
+    SimpleMailMessage smm = MailMessage.createFrom(original).createSimpleMailMessage();
+    assertEquals(original.getFrom(), smm.getFrom());
+    assertEquals(original.getReplyTo(), smm.getReplyTo());
+    assertArrayEquals(original.getTo(), smm.getTo());
+    assertArrayEquals(original.getCc(), smm.getCc());
+    assertArrayEquals(original.getBcc(), smm.getBcc());
+    assertEquals(original.getSentDate(), smm.getSentDate());
+    assertEquals(original.getSubject(), smm.getSubject());
+    assertEquals(original.getText(), smm.getText());
+  }
+
+  @Test
+  public void copy() {
+    MailMessage o1 = MailMessage.createFrom(original);
+    MailMessage o2 = o1.copy();
+
+    assertEquals(o1.getFrom(), o2.getFrom());
+    assertEquals(o1.getReplyTo(), o2.getReplyTo());
+    assertArrayEquals(o1.getToArray(), o2.getToArray());
+    assertArrayEquals(o1.getCcArray(), o2.getCcArray());
+    assertArrayEquals(o1.getBccArray(), o2.getBccArray());
+    assertNull(o2.getSentDate());
+    assertEquals(o1.getSubject(), o2.getSubject());
+    assertEquals(o1.getText(), o2.getText());
   }
 }

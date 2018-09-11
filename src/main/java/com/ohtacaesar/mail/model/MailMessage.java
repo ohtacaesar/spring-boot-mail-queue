@@ -144,7 +144,7 @@ public class MailMessage implements org.springframework.mail.MailMessage {
   }
 
   public String[] getBccArray() {
-    return cc.stream().map(MailAddress::getAddress).toArray(String[]::new);
+    return bcc.stream().map(MailAddress::getAddress).toArray(String[]::new);
   }
 
   public void setBcc(List<MailAddress> bcc) {
@@ -163,8 +163,18 @@ public class MailMessage implements org.springframework.mail.MailMessage {
         .collect(Collectors.toList());
   }
 
-  public static MailMessage createFrom(SimpleMailMessage simpleMailMessage) {
-    return new MailMessage();
+  public static MailMessage createFrom(SimpleMailMessage smm) {
+    MailMessage mailMessage = new MailMessage();
+    mailMessage.setFrom(smm.getFrom());
+    mailMessage.setReplyTo(smm.getReplyTo());
+    mailMessage.setTo(smm.getTo());
+    mailMessage.setCc(smm.getCc());
+    mailMessage.setBcc(smm.getBcc());
+    mailMessage.setSentDate(smm.getSentDate());
+    mailMessage.setSubject(smm.getSubject());
+    mailMessage.setText(smm.getText());
+
+    return mailMessage;
   }
 
   public SimpleMailMessage createSimpleMailMessage() {
