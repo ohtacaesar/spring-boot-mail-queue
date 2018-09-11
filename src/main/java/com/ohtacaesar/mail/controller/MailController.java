@@ -1,5 +1,6 @@
-package com.ohtacaesar.mail;
+package com.ohtacaesar.mail.controller;
 
+import com.ohtacaesar.mail.MailService;
 import com.ohtacaesar.mail.model.MailAddress;
 import com.ohtacaesar.mail.model.MailAddressRepository;
 import com.ohtacaesar.mail.model.MailMessage;
@@ -22,11 +23,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/")
 public class MailController {
 
   @Autowired
@@ -75,6 +74,7 @@ public class MailController {
 
   @GetMapping("new")
   public String newMail(MailMessage mailMessage, Model model) {
+    mailMessage.getTo().add(new MailAddress());
     model.addAttribute(mailMessage);
 
     return "new";
