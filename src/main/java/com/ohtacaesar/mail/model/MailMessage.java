@@ -69,7 +69,7 @@ public class MailMessage implements org.springframework.mail.MailMessage {
       joinColumns = @JoinColumn(name = "mail_message_id"),
       inverseJoinColumns = @JoinColumn(name = "mail_address_id")
   )
-  private List<MailAddress> to = Arrays.asList(new MailAddress());
+  private List<MailAddress> to = new ArrayList<>();
 
   @Valid
   @ManyToMany(cascade = CascadeType.PERSIST)
@@ -78,7 +78,7 @@ public class MailMessage implements org.springframework.mail.MailMessage {
       joinColumns = @JoinColumn(name = "mail_message_id"),
       inverseJoinColumns = @JoinColumn(name = "mail_address_id")
   )
-  private List<MailAddress> cc;
+  private List<MailAddress> cc = new ArrayList<>();
 
   @Valid
   @ManyToMany(cascade = CascadeType.PERSIST)
@@ -87,7 +87,7 @@ public class MailMessage implements org.springframework.mail.MailMessage {
       joinColumns = @JoinColumn(name = "mail_message_id"),
       inverseJoinColumns = @JoinColumn(name = "mail_address_id")
   )
-  private List<MailAddress> bcc;
+  private List<MailAddress> bcc = new ArrayList<>();
 
   private Date sentDate;
 
@@ -118,7 +118,7 @@ public class MailMessage implements org.springframework.mail.MailMessage {
 
   @Override
   public void setTo(String[] to) throws MailParseException {
-    this.to = Arrays.asList(to).stream()
+    this.to = Arrays.stream(to)
         .map(MailAddress::createWithAddress)
         .collect(Collectors.toList());
   }
@@ -138,7 +138,7 @@ public class MailMessage implements org.springframework.mail.MailMessage {
 
   @Override
   public void setCc(String[] cc) throws MailParseException {
-    this.cc = Arrays.asList(cc).stream()
+    this.cc = Arrays.stream(cc)
         .map(MailAddress::createWithAddress)
         .collect(Collectors.toList());
   }
@@ -158,9 +158,13 @@ public class MailMessage implements org.springframework.mail.MailMessage {
 
   @Override
   public void setBcc(String[] bcc) throws MailParseException {
-    this.bcc = Arrays.asList(bcc).stream()
+    this.bcc = Arrays.stream(bcc)
         .map(MailAddress::createWithAddress)
         .collect(Collectors.toList());
+  }
+
+  public static MailMessage createFrom(SimpleMailMessage simpleMailMessage) {
+    return new MailMessage();
   }
 
   public SimpleMailMessage createSimpleMailMessage() {

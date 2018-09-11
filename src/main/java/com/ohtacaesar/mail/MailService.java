@@ -26,9 +26,7 @@ public class MailService {
     }
     MailMessage o = list.get(0);
     o.setMailStatus(Status.LOCK);
-    repository.save(o);
-    o = repository.findOne(o.getId());
-
+    o = repository.save(o);
     try {
       sender.send(o.createSimpleMailMessage());
       o.setMailStatus(Status.SENT);
