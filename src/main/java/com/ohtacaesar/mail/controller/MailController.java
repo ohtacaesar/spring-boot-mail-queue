@@ -58,7 +58,8 @@ public class MailController {
 
   @GetMapping("{id}")
   public String show(@PathVariable int id, Model model) {
-    MailMessage o = messageRepository.findOne(id);
+    MailMessage o = messageRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Not found"));
     model.addAttribute(o);
 
     return "show";
@@ -67,7 +68,8 @@ public class MailController {
   @GetMapping("{id}/text")
   @ResponseBody
   public String text(@PathVariable int id) {
-    MailMessage e = messageRepository.findOne(id);
+    MailMessage e = messageRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Not found"));
     return e.getText();
   }
 
@@ -104,7 +106,7 @@ public class MailController {
 
   @PostMapping("{id}/resend")
   public String resend(@PathVariable int id) {
-    MailMessage e = messageRepository.findOne(id);
+    MailMessage e = messageRepository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
     e = e.copy();
     e.setSubject("Copy from" + id);
     messageRepository.save(e);
