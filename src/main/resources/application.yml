@@ -2,10 +2,9 @@ spring:
   profiles.active: @spring.profile@
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/mail?characterEncoding=UTF-8&connectionCollation=utf8mb4_general_ci
+    url: jdbc:mysql://127.0.0.1:3306/mail-queue
     username: root
-    test-on-borrow: true
-    validateion-query: select 1
+    password: root
 
   jpa:
     show-sql: false

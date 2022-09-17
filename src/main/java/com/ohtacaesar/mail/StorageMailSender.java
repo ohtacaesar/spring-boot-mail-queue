@@ -52,6 +52,6 @@ public class StorageMailSender implements MailSender {
         })
         .collect(Collectors.toList());
 
-    mailMessageRepository.save(mailMessageList);
+    mailMessageRepository.saveAll(mailMessageList);
   }
 }
