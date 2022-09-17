@@ -1,22 +1,17 @@
 package com.ohtacaesar.mail.model;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Date;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.mail.SimpleMailMessage;
 
-@RunWith(JUnit4.class)
 public class MailMessageUnitTest {
 
   private SimpleMailMessage original;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     Date date = new Date();
     original = new SimpleMailMessage();
